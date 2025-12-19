@@ -6,7 +6,7 @@
 
 html {
   scroll-behavior: auto;
-  scroll-padding-top: 80px; /* accounts for nav height */
+  scroll-padding-top: 80px;
 }
 
 :root {
@@ -125,8 +125,24 @@ footer {
   margin-bottom: 1.5rem;
 }
 
+/* Header */
 header {
-  padding: 1.5rem;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 100;
+  padding: 1.25rem 2rem;
+  background-color: transparent;
+  transition: background-color 0.4s ease, backdrop-filter 0.4s ease, border-color 0.4s ease;
+  border-bottom: 1px solid transparent;
+}
+
+header.scrolled {
+  background-color: rgba(58, 51, 48, 0.85); /* warm dark with transparency */
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border-bottom-color: rgba(255, 255, 255, 0.08);
 }
 
 nav {
@@ -183,6 +199,7 @@ nav a:hover::after {
   height: 1px;
   background-color: var(--color-hero-accent);
   opacity: 0.3;
+
 }
 
 .hero-content {
@@ -192,6 +209,7 @@ nav a:hover::after {
   justify-content: center;
   align-items: center;
   padding: 2rem 1.5rem 6rem; /* extra bottom padding shifts text above true center */
+  padding-top: 5rem; /* add space for fixed header */
 }
 
 .hero nav a {
@@ -254,6 +272,7 @@ nav a:hover::after {
   justify-content: center;
   align-items: center;
   padding: 4rem 3rem;
+  scroll-margin-top: 60px;
 }
 
 #services > div {
@@ -339,6 +358,7 @@ nav a:hover::after {
   height: 1px;
   background-color: var(--color-text);
   opacity: 0.1;
+  scroll-margin-top: 60px;
 }
 
 .about-container {
@@ -537,8 +557,18 @@ footer {
   animation-delay: 0.3s;
 }
 
+@media (prefers-reduced-motion: reduce) {
+  header {
+    transition: none;
+  }
+}
+
 /* Mobile adjustments */
 @media (max-width: 600px) {
+  html {
+    scroll-padding-top: 60px;
+  }
+
   /* Nav */
   header {
     padding: 1rem 1rem;
@@ -561,6 +591,7 @@ footer {
 
   .hero-content {
     padding: 2rem 1.25rem 3rem;
+    padding-top: 4rem;
   }
 
   h1 {

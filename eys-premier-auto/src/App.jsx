@@ -1,12 +1,25 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { scrollToSection } from './utils/scroll.js';
 
 function App() {
+  const [scrolled, setScrolled] = useState(false);
+
   const handleNavClick = (e, id) => {
     e.preventDefault();
-    scrollToSection(id, 0);
+    scrollToSection(id, 60);
   };
 
+  // Scroll detection for header styling
+  useEffect(() => {
+    const handleScroll = () => {
+      setScrolled(window.scrollY > 20);
+    };
+    
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
+
+  // Intersection observer for service cards
   useEffect(() => {
     const cards = document.querySelectorAll('#services > div > div');
     
@@ -29,7 +42,7 @@ function App() {
   return (
     <>
       <div className="hero">
-        <header>
+        <header className={scrolled ? 'scrolled' : ''}>
           <nav>
             <a href="#home" onClick={(e) => handleNavClick(e, 'home')}>Home</a>
             <a href="#services" onClick={(e) => handleNavClick(e, 'services')}>Services</a>
@@ -47,7 +60,7 @@ function App() {
 
         <button 
           className="scroll-cue" 
-          onClick={() => scrollToSection('services', 0)}
+          onClick={() => scrollToSection('services', 60)}
           aria-label="Scroll to services"
         >
           <span className="scroll-cue-text">Scroll</span>

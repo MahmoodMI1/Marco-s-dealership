@@ -67,15 +67,21 @@ function App() {
             </div>
           </div>
         </section>
-
+      
+        
         <section id="about">
           <h2>About Us</h2>
+          <div className="about-content">
           <img
             src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400&h=500&fit=crop&crop=face"
             alt="Marco Georgy"
             className="portrait"
           />
-          <p>Facebook | Instagram | Twitter</p>
+          <div className="about-text">
+            <p>We are a team of dedicated professionals who are passionate about providing the best possible service to our customers.</p>
+            <p>Facebook | Instagram | Twitter</p>
+          </div>
+          </div>
         </section>
       </main>
 

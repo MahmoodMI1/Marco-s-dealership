@@ -100,17 +100,6 @@ section > div {
   margin-top: 1.5rem;
 }
 
-#services > div > div {
-  flex: 1;
-  margin-bottom: 0;
-  background-color: var(--color-card);
-  padding: 3rem 2rem; /* tall and spacious */
-  min-height: 280px; /* ensures visual presence */
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-}
 
 section > div > div:last-child {
   margin-bottom: 0;
@@ -222,9 +211,9 @@ nav a:hover {
 
 #services {
   width: 100%;
-  max-width: 1200px; /* constrain total width */
-  margin: 0 auto; /* center the section */
-  padding: 4rem 3rem; /* comfortable side padding */
+  max-width: 1400px; /* wider */
+  margin: 0 auto;
+  padding: 6rem 4rem; /* more breathing room */
   min-height: 100vh;
   display: flex;
   flex-direction: column;
@@ -233,26 +222,26 @@ nav a:hover {
 
 #services > div {
   display: flex;
-  gap: 1.5rem;
+  gap: 2rem; /* increased from 1.5rem */
   max-width: none;
   margin: 0;
-  margin-top: 3rem;
-  align-items: stretch; /* ensure equal height */
+  margin-top: 4rem; /* more space below title */
+  align-items: stretch;
 }
 
 #services > div > div {
   flex: 1;
   margin-bottom: 0;
   background-color: var(--color-card);
-  padding: 3rem 2rem;
-  min-height: 300px;
-  max-height: 400px;
+  padding: 4rem 2.5rem; /* increased */
+  min-height: 420px; /* taller pillars */
+  max-height: none; /* remove cap */
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
   align-items: center;
   text-align: center;
-  position: relative; /* needed for pseudo-element */
+  position: relative;
 }
 
 #services > div > div::before {
@@ -261,20 +250,30 @@ nav a:hover {
   top: 1.5rem;
   left: 50%;
   transform: translateX(-50%);
-  width: 40px;
+  width: 50px; /* slightly wider */
   height: 2px;
   background-color: var(--color-accent);
-  opacity: 0.4; /* subtle, secondary to title */
+  opacity: 0.35;
+  bottom: 2rem; /* more space from edge */
 }
 
 #services h3 {
-  margin-top: 2rem; /* space below the accent line */
-  margin-bottom: 0.75rem;
+  font-size: 1.5rem; /* increased from 1.25rem */
+  margin-top: 1rem;
+  margin-bottom: 1.25rem; /* more space before description */
+  letter-spacing: -0.01em; /* tighter, confident */
 }
 
 /* DELETE this rule: */
 #services > div > div:last-child {
   margin-bottom: 0;
+}
+
+#services > div > div p {
+  font-size: 0.9375rem; /* slightly smaller than body */
+  line-height: 1.7;
+  opacity: 0.75; /* visually secondary */
+  max-width: 240px; /* constrain for readability */
 }
 
 #services h3 {

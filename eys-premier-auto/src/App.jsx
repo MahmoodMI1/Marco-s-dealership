@@ -93,8 +93,14 @@ function App() {
       </main>
 
       <footer>
-        <p>EYS Premier Auto. All rights reserved.</p>
-      </footer>
+      <div className="footer-content">
+      <p className="footer-copy">© {new Date().getFullYear()} Marco Georgy</p>
+        <div className="footer-links">
+          <a href="https://dealership-site.com" target="_blank" rel="noopener noreferrer">View Inventory ↗</a>
+          <a href="mailto:contact@example.com">Contact</a>
+        </div>
+      </div>
+    </footer>
     </>
   );
 }

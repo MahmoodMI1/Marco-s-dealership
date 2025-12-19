@@ -70,16 +70,23 @@ function App() {
       
         
         <section id="about">
-          <h2>About Us</h2>
-          <div className="about-content">
+          
+        <div className="about-container">
           <img
             src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400&h=500&fit=crop&crop=face"
             alt="Marco Georgy"
             className="portrait"
           />
+
           <div className="about-text">
+            <h2>About Us</h2>
+            <span className="about-divider"></span>
             <p>We are a team of dedicated professionals who are passionate about providing the best possible service to our customers.</p>
-            <p>Facebook | Instagram | Twitter</p>
+            <div className="social-links">
+              <a href="https://facebook.com" target="_blank" rel="noopener noreferrer">Facebook</a>
+              <a href="https://instagram.com" target="_blank" rel="noopener noreferrer">Instagram</a>
+              <a href="https://twitter.com" target="_blank" rel="noopener noreferrer">Twitter</a>
+            </div>
           </div>
           </div>
         </section>

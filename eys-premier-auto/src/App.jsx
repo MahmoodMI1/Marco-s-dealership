@@ -81,7 +81,7 @@ function App() {
           <div className="about-text">
             <h2>About Us</h2>
             <span className="about-divider"></span>
-            <p>We are a team of dedicated professionals who are passionate about providing the best possible service to our customers.</p>
+            <p>I believe in building relationships, not just closing deals. Every client deserves honesty, transparency, and a car they can trust. That's the standard I hold myself to.</p>
             <div className="social-links">
               <a href="https://facebook.com" target="_blank" rel="noopener noreferrer">Facebook</a>
               <a href="https://instagram.com" target="_blank" rel="noopener noreferrer">Instagram</a>

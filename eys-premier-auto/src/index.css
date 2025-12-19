@@ -240,6 +240,7 @@ nav a:hover::after {
   transform: rotate(45deg) translate(2px, 2px);
 }
 
+/* Services */
 
 #services {
   width: 100%;
@@ -534,66 +535,122 @@ footer {
 
 /* Mobile adjustments */
 @media (max-width: 600px) {
-  main {
-    padding: 0 1.25rem;
-  }
-
-  h1 {
-    font-size: 3rem;
-    font-weight: 300;
-    letter-spacing: -0.02em;
-    line-height: 1.05;
-  }
-  
-  h2 {
-    font-size: 1.25rem;
-    margin-bottom: 2rem;
-  }
-  
-  .hero-content p {
-    font-size: 1rem;
-  }
-  
-
-  p {
-    line-height: 1.8;
-  }
-
-  section {
-    padding: 4rem 0; /* increased from 3rem */
-  }
-  
-  section:first-of-type {
-    padding: 5rem 0 4rem; /* increased from 4rem 0 3rem */
-  }
-  
-  section:last-of-type {
-    padding-bottom: 5rem; /* increased from 4rem */
-  }
-  
-  h2 {
-    margin-bottom: 2rem; /* increased from 1.5rem */
-  }
-
+  /* Nav */
   header {
-    padding: 1.25rem 1rem;
+    padding: 1rem 1rem;
+  }
+
+  nav {
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 0.75rem 1.25rem; /* tighter gaps to prevent awkward wrap */
   }
 
   nav a {
-    font-size: 0.9375rem;
+    font-size: 0.8125rem; /* slightly smaller */
   }
-  
-  nav {
-    gap: 1.25rem 1.75rem;
+
+  /* Hero */
+  .hero {
+    min-height: 100svh;
+  }
+
+  .hero-content {
+    padding: 2rem 1.25rem 3rem;
+  }
+
+  h1 {
+    font-size: 2.5rem; /* reduced for 390px */
+    font-weight: 300;
+    letter-spacing: -0.02em;
+    line-height: 1.1;
+    margin-bottom: 1rem;
+  }
+
+  .hero-content p {
+    font-size: 0.9375rem;
+    padding: 0 0.5rem;
+  }
+
+  .scroll-cue {
+    padding-bottom: 2rem;
+  }
+
+  /* Services */
+  #services {
+    padding: 3rem 1.25rem;
+    min-height: auto;
+  }
+
+  #services h2 {
+    font-size: 1.25rem;
+    margin-bottom: 2rem;
+  }
+
+  #services > div {
+    grid-template-columns: 1fr;
+    gap: 1.25rem;
+    margin-top: 1.5rem;
+  }
+
+  #services > div > div {
+    padding: 2rem 1.25rem;
+    min-height: auto;
+  }
+
+  #services h3 {
+    font-size: 1.125rem;
+  }
+
+  .service-eyebrow {
+    margin-bottom: 0.75rem;
+  }
+
+  /* About */
+  #about {
+    padding: clamp(3rem, 6vw, 4rem) 0;
+  }
+
+  .about-container {
+    grid-template-columns: 1fr;
+    gap: 2rem;
+    padding: 0 1.25rem;
   }
 
   .portrait {
-    width: 140px;
-    height: 175px;
+    max-width: 220px;
+    margin: 0 auto;
+    border-radius: 10px;
+    width: 100%;
+    height: auto;
   }
 
+  .about-text {
+    max-width: 100%;
+    text-align: center;
+    padding-top: 0;
+  }
+
+  .about-text h2 {
+    text-align: center;
+  }
+
+  .about-divider {
+    margin: 0 auto 1.25rem;
+  }
+
+  .about-text p {
+    font-size: 0.9375rem;
+    line-height: 1.8;
+  }
+
+  .social-links {
+    justify-content: center;
+  }
+
+  /* Footer */
   footer {
-    padding: 1.5rem;
+    padding: 1.5rem 1.25rem;
   }
 
   .footer-content {
@@ -603,68 +660,20 @@ footer {
   }
 
   .footer-links {
-    gap: 1.5rem;
-  }
-  
-  .hero {
-    min-height: 100svh;
+    gap: 1.25rem;
   }
 
-  .hero-content {
-    padding: 2rem 1.25rem 4rem; /* proportionally smaller offset on mobile */
+  /* General */
+  main {
+    padding: 0 1.25rem;
   }
 
-  .scroll-cue {
-    padding-bottom: 2.5rem; /* proportionally smaller lift on mobile */
-  }
-
-  #services {
-    padding: 3rem 1.5rem;
-    min-height: auto;
-  }
-  
-  #services > div {
-    grid-template-columns: 1fr;
-    gap: 1.5rem;
-    margin-top: 2rem;
-  }
-  
-  #services > div > div {
-    padding: 3rem 1.5rem;
-    min-height: auto;
-  }
-  
-  #services h3 {
+  h2 {
     font-size: 1.25rem;
+    margin-bottom: 1.5rem;
   }
 
-  #about {
-    padding: 4rem 1.5rem;
-  }
-
-  .about-container {
-    grid-template-columns: 1fr;
-    gap: 2.5rem;
-    padding: 0 1.5rem;
-  }
-
-  .portrait {
-    max-width: 260px;
-    margin: 0 auto;
-    border-radius: 10px;
-  }
-
-  .about-text {
-    max-width: 100%;
-    text-align: left;
-    padding-top: 0;
-  }
-
-  .about-text h2 {
-    text-align: left;
-  }
-
-  .social-links {
-    justify-content: flex-start;
+  p {
+    line-height: 1.75;
   }
 }

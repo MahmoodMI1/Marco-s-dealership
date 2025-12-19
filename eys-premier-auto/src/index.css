@@ -133,15 +133,31 @@ nav {
 }
 
 nav a {
-  font-size: 1rem; /* increased from 0.875rem */
+  font-size: 0.875rem;
   font-weight: 500;
   letter-spacing: 0.03em;
-  transition: opacity 200ms ease-out, transform 200ms ease-out;
+  transition: opacity 0.3s ease;
+  position: relative;
+}
+
+nav a::after {
+  content: '';
+  position: absolute;
+  bottom: -4px;
+  left: 0;
+  width: 0;
+  height: 1px;
+  background-color: currentColor;
+  transition: width 0.3s ease;
 }
 
 nav a:hover {
-  opacity: 0.7;
+  opacity: 0.85;
   transform: translateY(-1px);
+}
+
+nav a:hover::after {
+  width: 100%;
 }
 
 /* Hero */
@@ -183,6 +199,10 @@ nav a:hover {
   opacity: 0.7;
 }
 
+.hero nav a::after {
+  background-color: var(--color-hero-text);
+}
+
 
 
 /* Scroll cue */
@@ -192,9 +212,13 @@ nav a:hover {
   flex-direction: column;
   align-items: center;
   gap: 0.5rem;
-  padding-bottom: 3rem; /* increased to pull cue up from viewport edge */
+  padding-bottom: 3rem;
+  transition: opacity 0.4s ease;
 }
 
+.scroll-cue:hover {
+  opacity: 0.6;
+}
 
 .scroll-cue-text {
   font-size: 0.75rem;
@@ -205,10 +229,15 @@ nav a:hover {
 .scroll-cue-arrow {
   width: 10px;
   height: 10px;
-  border-right-color: var(--color-hero-text);
-  border-bottom-color: var(--color-hero-text);
+  border-right: 1.5px solid var(--color-hero-text);
+  border-bottom: 1.5px solid var(--color-hero-text);
   transform: rotate(45deg);
+  transition: transform 0.3s ease;
 }
+.scroll-cue:hover .scroll-cue-arrow {
+  transform: rotate(45deg) translate(2px, 2px);
+}
+
 
 #services {
   width: 100%;
@@ -239,6 +268,12 @@ nav a:hover {
   align-items: center;
   text-align: center;
   position: relative;
+  transition: transform 0.4s ease, background-color 0.4s ease;
+}
+
+#services > div > div:hover {
+  transform: translateY(-4px);
+  background-color: #e6e4df; /* slightly darker than --color-card */
 }
 
 #services > div > div::before {
@@ -252,6 +287,7 @@ nav a:hover {
   background-color: var(--color-accent);
   opacity: 0.35;
 }
+
 
 
 #services h3 {

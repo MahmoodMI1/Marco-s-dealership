@@ -1,10 +1,7 @@
 import { useEffect, useState } from 'react';
 import { scrollToSection } from './utils/scroll.js';
-import { Routes, Route, Link } from 'react-router-dom';
-import InventoryPage from './inventory/pages/InventoryPage.jsx';
-import ListingDetailPage from './inventory/pages/ListingDetailPage.jsx';
 
-function Portfolio() {
+function App() {
   const [scrolled, setScrolled] = useState(false);
 
   const handleNavClick = (e, id) => {
@@ -50,7 +47,9 @@ function Portfolio() {
             <a href="#home" onClick={(e) => handleNavClick(e, 'home')}>Home</a>
             <a href="#services" onClick={(e) => handleNavClick(e, 'services')}>Services</a>
             <a href="#about" onClick={(e) => handleNavClick(e, 'about')}>About</a>
-            <Link to="/inventory">View Inventory</Link>
+            <a href="https://dealership-site.com" target="_blank" rel="noopener noreferrer">
+              View Inventory ↗
+            </a>
           </nav>
         </header>
 
@@ -113,22 +112,12 @@ function Portfolio() {
         <div className="footer-content">
           <p className="footer-copy">© {new Date().getFullYear()} Marco Georgy</p>
           <div className="footer-links">
-            <Link to="/inventory">View Inventory</Link>
+            <a href="https://dealership-site.com" target="_blank" rel="noopener noreferrer">View Inventory ↗</a>
             <a href="mailto:contact@example.com">Contact</a>
           </div>
         </div>
       </footer>
     </>
-  );
-}
-
-function App() {
-  return (
-    <Routes>
-      <Route path="/" element={<Portfolio />} />
-      <Route path="/inventory" element={<InventoryPage />} />
-      <Route path="/inventory/:id" element={<ListingDetailPage />} />
-    </Routes>
   );
 }
 

@@ -13,8 +13,9 @@ html {
   --color-text: #3d3a36;
   --color-accent: #6b7259;
   --color-card: #eceae5;
-  --color-hero-bg: #252628; /* neutral cool charcoal */
-  --color-hero-text: #f9f7f4; /* warm off-white — keep same */
+  --color-hero-bg: #3a3330; /* warm cocoa charcoal */
+  --color-hero-text: #f7f4ef; /* warm off-white */
+  --color-hero-accent: #c9b896; /* muted champagne/gold */
 }
 
 body {
@@ -148,14 +149,9 @@ nav a:hover {
   min-height: 100vh;
   display: flex;
   flex-direction: column;
-  background: linear-gradient(
-    to bottom,
-    #1e1f21 0%,
-    #252628 40%,
-    #2a2b2d 100%
-  );
+  background-color: var(--color-hero-bg);
   color: var(--color-hero-text);
-  position: relative; /* for pseudo-element */
+  position: relative;
 }
 
 .hero::after {
@@ -166,7 +162,8 @@ nav a:hover {
   transform: translateX(-50%);
   width: 60px;
   height: 1px;
-  background-color: rgba(255, 255, 255, 0.08); /* barely visible */
+  background-color: var(--color-hero-accent);
+  opacity: 0.3;
 }
 
 .hero-content {
@@ -278,6 +275,63 @@ nav a:hover {
 
 #services h3 {
   margin-bottom: 0.25rem; /* reduced from 0.5rem — tighter coupling */
+}
+
+/* ANIMATIONS */
+@keyframes fadeUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.hero-content h1 {
+  animation: fadeUp 1.2s ease-out forwards;
+}
+
+.hero-content p {
+  animation: fadeUp 1.2s ease-out 0.2s forwards;
+  opacity: 0; /* start hidden, animation fills */
+}
+
+.scroll-cue {
+  animation: fadeUp 1s ease-out 0.5s forwards;
+  opacity: 0;
+}
+
+@keyframes fadeUpCard {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+#services > div > div {
+  opacity: 0;
+}
+
+#services > div > div.visible {
+  animation: fadeUpCard 0.8s ease-out forwards;
+}
+
+#services > div > div:nth-child(1).visible {
+  animation-delay: 0s;
+}
+
+#services > div > div:nth-child(2).visible {
+  animation-delay: 0.15s;
+}
+
+#services > div > div:nth-child(3).visible {
+  animation-delay: 0.3s;
 }
 
 /* Mobile adjustments */

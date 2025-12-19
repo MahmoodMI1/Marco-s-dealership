@@ -1,4 +1,26 @@
+import { useEffect } from 'react';
+
 function App() {
+  useEffect(() => {
+    const cards = document.querySelectorAll('#services > div > div');
+    
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('visible');
+          }
+        });
+      },
+      { threshold: 0.2 }
+    );
+    
+    cards.forEach((card) => observer.observe(card));
+    
+    return () => observer.disconnect();
+  }, []);
+
+  
   return (
     <>
       <div className="hero">

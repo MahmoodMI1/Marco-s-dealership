@@ -5,7 +5,8 @@
 }
 
 html {
-  scroll-behavior: smooth;
+  scroll-behavior: auto;
+  scroll-padding-top: 80px; /* accounts for nav height */
 }
 
 :root {
@@ -209,12 +210,15 @@ nav a:hover::after {
 
 /* Scroll cue */
 .scroll-cue {
-  color: var(--color-hero-text);
   display: flex;
   flex-direction: column;
   align-items: center;
   gap: 0.5rem;
   padding-bottom: 3rem;
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: var(--color-hero-text);
   transition: opacity 0.4s ease;
 }
 

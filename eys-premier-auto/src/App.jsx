@@ -1,6 +1,12 @@
 import { useEffect } from 'react';
+import { scrollToSection } from './utils/scroll.js';
 
 function App() {
+  const handleNavClick = (e, id) => {
+    e.preventDefault();
+    scrollToSection(id, 0);
+  };
+
   useEffect(() => {
     const cards = document.querySelectorAll('#services > div > div');
     
@@ -20,15 +26,14 @@ function App() {
     return () => observer.disconnect();
   }, []);
 
-  
   return (
     <>
       <div className="hero">
         <header>
           <nav>
-            <a href="#home">Home</a>
-            <a href="#services">Services</a>
-            <a href="#about">About</a>
+            <a href="#home" onClick={(e) => handleNavClick(e, 'home')}>Home</a>
+            <a href="#services" onClick={(e) => handleNavClick(e, 'services')}>Services</a>
+            <a href="#about" onClick={(e) => handleNavClick(e, 'about')}>About</a>
             <a href="https://dealership-site.com" target="_blank" rel="noopener noreferrer">
               View Inventory ↗
             </a>
@@ -40,13 +45,14 @@ function App() {
           <p>Your trusted partner in automotive excellence</p>
         </section>
 
-        <div className="scroll-cue">
-          <a href="#services" className="scroll-cue">
-            <span className="scroll-cue-text">Scroll</span>
-            <span className="scroll-cue-arrow" aria-hidden="true"></span>
-          </a>
-
-        </div>
+        <button 
+          className="scroll-cue" 
+          onClick={() => scrollToSection('services', 0)}
+          aria-label="Scroll to services"
+        >
+          <span className="scroll-cue-text">Scroll</span>
+          <span className="scroll-cue-arrow" aria-hidden="true"></span>
+        </button>
       </div>
 
       <main>
@@ -67,40 +73,37 @@ function App() {
             </div>
           </div>
         </section>
-      
-        
-        <section id="about">
-          
-        <div className="about-container">
-          <img
-            src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400&h=500&fit=crop&crop=face"
-            alt="Marco Georgy"
-            className="portrait"
-          />
 
-          <div className="about-text">
-            <h2>About Us</h2>
-            <span className="about-divider"></span>
-            <p>I believe in building relationships, not just closing deals. Every client deserves honesty, transparency, and a car they can trust. That's the standard I hold myself to.</p>
-            <div className="social-links">
-              <a href="https://facebook.com" target="_blank" rel="noopener noreferrer">Facebook</a>
-              <a href="https://instagram.com" target="_blank" rel="noopener noreferrer">Instagram</a>
-              <a href="https://twitter.com" target="_blank" rel="noopener noreferrer">Twitter</a>
+        <section id="about">
+          <div className="about-container">
+            <img
+              src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400&h=500&fit=crop&crop=face"
+              alt="Marco Georgy"
+              className="portrait"
+            />
+            <div className="about-text">
+              <h2>About Us</h2>
+              <span className="about-divider"></span>
+              <p>I believe in building relationships, not just closing deals. Every client deserves honesty, transparency, and a car they can trust. That's the standard I hold myself to.</p>
+              <div className="social-links">
+                <a href="https://facebook.com" target="_blank" rel="noopener noreferrer">Facebook</a>
+                <a href="https://instagram.com" target="_blank" rel="noopener noreferrer">Instagram</a>
+                <a href="https://twitter.com" target="_blank" rel="noopener noreferrer">Twitter</a>
+              </div>
             </div>
-          </div>
           </div>
         </section>
       </main>
 
       <footer>
-      <div className="footer-content">
-      <p className="footer-copy">© {new Date().getFullYear()} Marco Georgy</p>
-        <div className="footer-links">
-          <a href="https://dealership-site.com" target="_blank" rel="noopener noreferrer">View Inventory ↗</a>
-          <a href="mailto:contact@example.com">Contact</a>
+        <div className="footer-content">
+          <p className="footer-copy">© {new Date().getFullYear()} Marco Georgy</p>
+          <div className="footer-links">
+            <a href="https://dealership-site.com" target="_blank" rel="noopener noreferrer">View Inventory ↗</a>
+            <a href="mailto:contact@example.com">Contact</a>
+          </div>
         </div>
-      </div>
-    </footer>
+      </footer>
     </>
   );
 }

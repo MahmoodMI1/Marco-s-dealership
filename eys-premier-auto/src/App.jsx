@@ -1,23 +1,33 @@
 function App() {
   return (
     <>
-      <header>
-        <nav>
-          <a href="#home">Home</a>
-          <a href="#services">Services</a>
-          <a href="#about">About</a>
-          <a href="https://dealership-site.com" target="_blank" rel="noopener noreferrer">
-            View Inventory ↗
-          </a>
-        </nav>
-      </header>
+      <div className="hero">
+        <header>
+          <nav>
+            <a href="#home">Home</a>
+            <a href="#services">Services</a>
+            <a href="#about">About</a>
+            <a href="https://dealership-site.com" target="_blank" rel="noopener noreferrer">
+              View Inventory ↗
+            </a>
+          </nav>
+        </header>
 
-      <main>
-        <section id="home">
+        <section id="home" className="hero-content">
           <h1>Marco Georgy</h1>
           <p>Your trusted partner in automotive excellence</p>
         </section>
 
+        <div className="scroll-cue">
+          <a href="#services" className="scroll-cue">
+            <span className="scroll-cue-text">Scroll</span>
+            <span className="scroll-cue-arrow" aria-hidden="true"></span>
+          </a>
+
+        </div>
+      </div>
+
+      <main>
         <section id="services">
           <h2>Our Services</h2>
           <div>

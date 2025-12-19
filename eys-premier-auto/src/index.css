@@ -4,6 +4,10 @@
   box-sizing: border-box;
 }
 
+html {
+  scroll-behavior: smooth;
+}
+
 :root {
   --color-background: #f5f3ef;
   --color-text: #3d3a36;
@@ -21,11 +25,10 @@ body {
 }
 
 main {
-  max-width: 720px;
+  max-width: 600px; /* reduced from 720px for tighter, editorial feel */
   margin: 0 auto;
   padding: 0 1.5rem;
 }
-
 h1 {
   font-size: 2.75rem;
   font-weight: 500;
@@ -35,10 +38,10 @@ h1 {
 }
 
 h2 {
-  font-size: 1.125rem;
+  font-size: 1.25rem; /* increased from 1.125rem */
   font-weight: 500;
   letter-spacing: 0.01em;
-  margin-bottom: 2rem;
+  margin-bottom: 2.5rem; /* increased from 2rem for more breathing room */
 }
 
 h3 {
@@ -63,15 +66,15 @@ a:hover {
 }
 
 section {
-  padding: 4rem 0;
+  padding: 6rem 0; /* increased from 4rem */
 }
 
 section:first-of-type {
-  padding: 6rem 0 4rem;
+  padding: 8rem 0 6rem; /* most space after hero */
 }
 
 section:last-of-type {
-  padding-bottom: 5rem;
+  padding-bottom: 7rem; /* increased from 5rem */
 }
 
 section > p {
@@ -128,6 +131,46 @@ nav a:hover {
   transform: translateY(-1px);
 }
 
+/* Hero */
+.hero {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.hero-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 2rem 1.5rem 6rem; /* extra bottom padding shifts text above true center */
+}
+
+/* Scroll cue */
+.scroll-cue {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+  padding-bottom: 3rem; /* increased to pull cue up from viewport edge */
+}
+
+
+.scroll-cue-text {
+  font-size: 0.75rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.scroll-cue-arrow {
+  width: 10px;
+  height: 10px;
+  border-right: 1.5px solid var(--color-text);
+  border-bottom: 1.5px solid var(--color-text);
+  transform: rotate(45deg);
+}
+
 /* Mobile adjustments */
 @media (max-width: 600px) {
   main {
@@ -148,15 +191,19 @@ nav a:hover {
   }
 
   section {
-    padding: 3rem 0;
+    padding: 4rem 0; /* increased from 3rem */
   }
-
+  
   section:first-of-type {
-    padding: 4rem 0 3rem;
+    padding: 5rem 0 4rem; /* increased from 4rem 0 3rem */
   }
-
+  
   section:last-of-type {
-    padding-bottom: 4rem;
+    padding-bottom: 5rem; /* increased from 4rem */
+  }
+  
+  h2 {
+    margin-bottom: 2rem; /* increased from 1.5rem */
   }
 
   header {
@@ -175,5 +222,17 @@ nav a:hover {
 
   footer {
     padding: 1.5rem 1.25rem;
+  }
+
+  .hero {
+    min-height: 100svh;
+  }
+
+  .hero-content {
+    padding: 2rem 1.25rem 4rem; /* proportionally smaller offset on mobile */
+  }
+
+  .scroll-cue {
+    padding-bottom: 2.5rem; /* proportionally smaller lift on mobile */
   }
 }

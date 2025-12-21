@@ -14,11 +14,18 @@ export default function ListingDetailPage() {
     );
   }
 
+  const displayTitle = `${listing.year} ${listing.make} ${listing.model}`;
+  const displayImage = listing.images?.[0] || '';
+
   return (
     <div style={{ padding: '24px', maxWidth: '800px', margin: '0 auto' }}>
       <Link to="/inventory">← Back to Inventory</Link>
-      <img src={listing.image} alt={listing.title} style={{ width: '100%', maxHeight: '400px', objectFit: 'cover', borderRadius: '8px', marginTop: '16px' }} />
-      <h1>{listing.title}</h1>
+      <img
+        src={displayImage}
+        alt={displayTitle}
+        style={{ width: '100%', maxHeight: '400px', objectFit: 'cover', borderRadius: '8px', marginTop: '16px' }}
+      />
+      <h1>{displayTitle}</h1>
       <p style={{ fontSize: '24px', fontWeight: 'bold' }}>${listing.price.toLocaleString()}</p>
       <p style={{ color: '#666' }}>{listing.mileage.toLocaleString()} miles</p>
     </div>

@@ -27,11 +27,12 @@ export default function ListingDetailPage() {
   const displayImage = hasImages ? listing.images[0] : null;
 
   // Build specs array, filter out falsy values
-  const specsArray = listing.specs
-    ? Object.entries(listing.specs)
-        .map(([label, value]) => ({ label, value }))
-        .filter((spec) => spec.value)
-    : [];
+  const isAdminSpecs = Array.isArray(listing.specs);
+  const specsArray = isAdminSpecs
+    ? listing.specs.filter(s => s.label && s.value != null && s.value !== '')
+    : listing.specs
+      ? Object.entries(listing.specs).map(([label, value]) => ({ label, value })).filter(s => s.value)
+      : [];
 
   const hasBadges = listing.badges && listing.badges.length > 0;
   const hasDescription = Boolean(listing.description);

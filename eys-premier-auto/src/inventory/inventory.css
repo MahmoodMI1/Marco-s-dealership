@@ -129,7 +129,37 @@
     border: 0;
   }
   
-  /* Responsive — stack tools on mobile */
+  /* Empty State */
+.inv-empty {
+    text-align: center;
+    padding: 48px 16px;
+  }
+  
+  .inv-empty-text {
+    margin: 0 0 16px;
+    font-size: 1rem;
+    opacity: 0.7;
+  }
+  
+  .inv-clear-btn {
+    padding: 10px 20px;
+    font-size: 0.9375rem;
+    border: 1px solid rgba(128, 128, 128, 0.3);
+    border-radius: 6px;
+    background: transparent;
+    color: inherit;
+    cursor: pointer;
+  }
+  
+  .inv-clear-btn:hover {
+    border-color: rgba(128, 128, 128, 0.5);
+  }
+  
+  .inv-clear-btn:focus-visible {
+    outline: 2px solid currentColor;
+    outline-offset: 2px;
+  }
+  /*mobile responsive */
   @media (max-width: 600px) {
     .inv-tools {
       flex-direction: column;

@@ -1,0 +1,142 @@
+/* Inventory — Catalog Layout */
+
+/* Top Bar */
+.inv-topbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 12px 24px;
+    border-bottom: 1px solid rgba(128, 128, 128, 0.15);
+  }
+  
+  .inv-topbar-brand {
+    font-weight: 600;
+    font-size: 1rem;
+    text-decoration: none;
+    color: inherit;
+  }
+  
+  .inv-topbar-link {
+    font-size: 0.875rem;
+    text-decoration: none;
+    color: inherit;
+    opacity: 0.6;
+  }
+  
+  .inv-topbar-link:hover {
+    opacity: 1;
+  }
+  
+  /* Container */
+  .inv-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 24px 16px;
+  }
+  
+  /* Header */
+  .inv-header {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 16px;
+    flex-wrap: wrap;
+    margin-bottom: 20px;
+  }
+  
+  .inv-title {
+    margin: 0;
+    font-size: 1.75rem;
+    font-weight: 600;
+    line-height: 1.1;
+  }
+  
+  .inv-count {
+    margin: 0;
+    font-size: 0.875rem;
+    opacity: 0.6;
+  }
+  
+  /* Tools Row */
+  .inv-tools {
+    display: flex;
+    gap: 12px;
+    align-items: stretch;
+    margin-bottom: 24px;
+  }
+  
+  .inv-search {
+    flex: 1;
+    min-width: 0;
+  }
+  
+  .inv-search-input {
+    width: 100%;
+    padding: 10px 14px;
+    font-size: 0.9375rem;
+    border: 1px solid rgba(128, 128, 128, 0.3);
+    border-radius: 6px;
+    background: transparent;
+    color: inherit;
+  }
+  
+  .inv-search-input::placeholder {
+    opacity: 0.5;
+  }
+  
+  .inv-search-input:focus {
+    outline: none;
+    border-color: rgba(128, 128, 128, 0.6);
+  }
+  
+  .inv-sort {
+    flex-shrink: 0;
+  }
+  
+  .inv-sort-select {
+    padding: 10px 14px;
+    font-size: 0.9375rem;
+    border: 1px solid rgba(128, 128, 128, 0.3);
+    border-radius: 6px;
+    background: transparent;
+    color: inherit;
+    cursor: pointer;
+    min-width: 160px;
+  }
+  
+  .inv-sort-select:focus {
+    outline: none;
+    border-color: rgba(128, 128, 128, 0.6);
+  }
+  
+  /* Grid */
+  .inv-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 24px;
+  }
+  
+  /* Accessibility */
+  .visually-hidden {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+  }
+  
+  /* Responsive — stack tools on mobile */
+  @media (max-width: 600px) {
+    .inv-tools {
+      flex-direction: column;
+    }
+  
+    .inv-sort-select {
+      width: 100%;
+      min-width: auto;
+    }
+  }

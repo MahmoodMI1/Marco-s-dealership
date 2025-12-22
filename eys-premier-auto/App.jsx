@@ -1,5 +1,8 @@
 import { useEffect, useState } from 'react';
 import { scrollToSection } from './utils/scroll.js';
+import AdminGatePage from './admin/pages/AdminGatePage.jsx';
+import AdminListingsPage from './admin/pages/AdminListingsPage.jsx';
+import AdminListingFormPage from './admin/pages/AdminListingFormPage.jsx';
 
 function App() {
   const [scrolled, setScrolled] = useState(false);

@@ -462,9 +462,6 @@
     position: static;
   }
 
-  .inv-detail-specs {
-    grid-template-columns: 1fr;
-  }
 
   .inv-detail-spec-row:last-child {
     border-bottom: none;

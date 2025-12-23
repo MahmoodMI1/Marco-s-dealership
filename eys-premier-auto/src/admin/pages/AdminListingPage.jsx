@@ -1,10 +1,18 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { getAllListings, deleteListing } from '../../inventory/repo/ListingsRepo.js';
 import AdminLayout from '../components/AdminLayout.jsx';
 
 export default function AdminListingsPage() {
   const [listings, setListings] = useState(() => getAllListings());
+  const [toast, setToast] = useState(null);
+
+  // Auto-hide toast after 2 seconds
+  useEffect(() => {
+    if (!toast) return;
+    const timer = setTimeout(() => setToast(null), 2000);
+    return () => clearTimeout(timer);
+  }, [toast]);
 
   const formatTitle = (listing) => {
     const base = `${listing.year} ${listing.make} ${listing.model}`;
@@ -12,9 +20,10 @@ export default function AdminListingsPage() {
   };
 
   const handleDelete = (id, title) => {
-    if (!window.confirm(`Delete "${title}"? This cannot be undone.`)) return;
+    if (!window.confirm(`Delete "${title}"?\n\nThis action cannot be undone.`)) return;
     deleteListing(id);
     setListings(getAllListings());
+    setToast(`"${title}" deleted`);
   };
 
   return (
@@ -28,6 +37,13 @@ export default function AdminListingsPage() {
           + New Listing
         </Link>
       </div>
+
+      {/* Toast Notification */}
+      {toast && (
+        <div className="admin-toast">
+          {toast}
+        </div>
+      )}
 
       {listings.length > 0 ? (
         <div className="admin-list">

@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo, useRef } from 'react';
 import { useParams, useNavigate, Link } from 'react-router-dom';
 import {
   getListingById,
@@ -6,6 +6,8 @@ import {
   updateListing,
 } from '../../inventory/repo/ListingsRepo.js';
 import AdminLayout from '../components/AdminLayout.jsx';
+
+const currentYear = new Date().getFullYear();
 
 const emptyForm = {
   year: '',
@@ -20,6 +22,10 @@ const emptyForm = {
   description: '',
 };
 
+function serializeForm(form, specs) {
+  return JSON.stringify({ form, specs });
+}
+
 export default function AdminListingFormPage() {
   const { id } = useParams();
   const navigate = useNavigate();
@@ -29,16 +35,37 @@ export default function AdminListingFormPage() {
   const [specs, setSpecs] = useState([]);
   const [errors, setErrors] = useState({});
   const [notFound, setNotFound] = useState(false);
+  const [initialSnapshot, setInitialSnapshot] = useState('');
+
+  // Track dirty state
+  const isDirty = useMemo(() => {
+    return serializeForm(form, specs) !== initialSnapshot;
+  }, [form, specs, initialSnapshot]);
+
+  // Warn on browser close/refresh with unsaved changes
+  useEffect(() => {
+    const handleBeforeUnload = (e) => {
+      if (isDirty) {
+        e.preventDefault();
+        e.returnValue = '';
+      }
+    };
+    window.addEventListener('beforeunload', handleBeforeUnload);
+    return () => window.removeEventListener('beforeunload', handleBeforeUnload);
+  }, [isDirty]);
 
   // Load existing listing for edit mode
   useEffect(() => {
-    if (!isEdit) return;
+    if (!isEdit) {
+      setInitialSnapshot(serializeForm(emptyForm, []));
+      return;
+    }
     const listing = getListingById(id);
     if (!listing) {
       setNotFound(true);
       return;
     }
-    setForm({
+    const loadedForm = {
       year: listing.year?.toString() || '',
       make: listing.make || '',
       model: listing.model || '',
@@ -49,11 +76,14 @@ export default function AdminListingFormPage() {
       badges: listing.badges?.join(', ') || '',
       images: listing.images?.join('\n') || '',
       description: listing.description || '',
-    });
-    // Convert specs object to array of { key, value }
-    if (listing.specs && typeof listing.specs === 'object') {
-      setSpecs(Object.entries(listing.specs).map(([key, value]) => ({ key, value })));
-    }
+    };
+    const loadedSpecs = listing.specs && typeof listing.specs === 'object'
+      ? Object.entries(listing.specs).map(([key, value]) => ({ key, value }))
+      : [];
+    
+    setForm(loadedForm);
+    setSpecs(loadedSpecs);
+    setInitialSnapshot(serializeForm(loadedForm, loadedSpecs));
   }, [id, isEdit]);
 
   const handleChange = (e) => {
@@ -80,14 +110,47 @@ export default function AdminListingFormPage() {
     setSpecs((prev) => prev.filter((_, i) => i !== index));
   };
 
+  // Parse image URLs for preview
+  const imageUrls = useMemo(() => {
+    return form.images
+      .split('\n')
+      .map((url) => url.trim())
+      .filter(Boolean)
+      .slice(0, 3);
+  }, [form.images]);
+
   const validate = () => {
     const newErrors = {};
-    if (!form.year || isNaN(Number(form.year))) newErrors.year = 'Valid year required';
-    if (!form.make.trim()) newErrors.make = 'Make required';
-    if (!form.model.trim()) newErrors.model = 'Model required';
-    if (!form.price || isNaN(Number(form.price))) newErrors.price = 'Valid price required';
-    if (!form.mileage || isNaN(Number(form.mileage))) newErrors.mileage = 'Valid mileage required';
-    if (!form.location.trim()) newErrors.location = 'Location required';
+    const yearNum = Number(form.year);
+    const priceNum = Number(form.price);
+    const mileageNum = Number(form.mileage);
+
+    // Year: 1900 to currentYear+1
+    if (!form.year || isNaN(yearNum)) {
+      newErrors.year = 'Year is required';
+    } else if (yearNum < 1900 || yearNum > currentYear + 1) {
+      newErrors.year = `Year must be between 1900 and ${currentYear + 1}`;
+    }
+
+    // Make/Model/Location: required, trimmed
+    if (!form.make.trim()) newErrors.make = 'Make is required';
+    if (!form.model.trim()) newErrors.model = 'Model is required';
+    if (!form.location.trim()) newErrors.location = 'Location is required';
+
+    // Price: required, >= 0
+    if (!form.price || isNaN(priceNum)) {
+      newErrors.price = 'Price is required';
+    } else if (priceNum < 0) {
+      newErrors.price = 'Price cannot be negative';
+    }
+
+    // Mileage: required, >= 0
+    if (!form.mileage || isNaN(mileageNum)) {
+      newErrors.mileage = 'Mileage is required';
+    } else if (mileageNum < 0) {
+      newErrors.mileage = 'Mileage cannot be negative';
+    }
+
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
@@ -96,7 +159,22 @@ export default function AdminListingFormPage() {
     e.preventDefault();
     if (!validate()) return;
 
-    // Build payload
+    // Normalize badges: split, trim, filter, dedupe
+    const badgesArray = [...new Set(
+      form.badges
+        .split(',')
+        .map((b) => b.trim())
+        .filter(Boolean)
+    )];
+
+    // Normalize images: split, trim, filter, dedupe
+    const imagesArray = [...new Set(
+      form.images
+        .split('\n')
+        .map((url) => url.trim())
+        .filter(Boolean)
+    )];
+
     const payload = {
       year: Number(form.year),
       make: form.make.trim(),
@@ -105,14 +183,8 @@ export default function AdminListingFormPage() {
       price: Number(form.price),
       mileage: Number(form.mileage),
       location: form.location.trim(),
-      badges: form.badges
-        .split(',')
-        .map((b) => b.trim())
-        .filter(Boolean),
-      images: form.images
-        .split('\n')
-        .map((url) => url.trim())
-        .filter(Boolean),
+      badges: badgesArray.length > 0 ? badgesArray : undefined,
+      images: imagesArray.length > 0 ? imagesArray : undefined,
       description: form.description.trim() || undefined,
       specs: specs.reduce((acc, { key, value }) => {
         const k = key.trim();
@@ -121,6 +193,9 @@ export default function AdminListingFormPage() {
       }, {}),
     };
 
+    // Clear dirty state before navigation
+    setInitialSnapshot(serializeForm(form, specs));
+
     if (isEdit) {
       updateListing(id, payload);
     } else {
@@ -128,6 +203,14 @@ export default function AdminListingFormPage() {
     }
 
     navigate('/admin/listings');
+  };
+
+  const handleCancel = (e) => {
+    if (isDirty) {
+      if (!window.confirm('You have unsaved changes. Discard them?')) {
+        e.preventDefault();
+      }
+    }
   };
 
   if (notFound) {
@@ -143,22 +226,27 @@ export default function AdminListingFormPage() {
     );
   }
 
+  const hasErrors = Object.keys(errors).length > 0;
+
   return (
     <AdminLayout>
-      <Link to="/admin/listings" className="admin-back">← Back to Listings</Link>
+      <Link to="/admin/listings" className="admin-back" onClick={handleCancel}>
+        ← Back to Listings
+      </Link>
       <div className="admin-page-header" style={{ marginBottom: 'var(--admin-space-5)' }}>
         <h1 className="admin-page-title">{isEdit ? 'Edit Listing' : 'New Listing'}</h1>
         <p className="admin-page-subtitle">
           {isEdit ? `Editing ID: ${id}` : 'Create a new vehicle listing'}
+          {isDirty && <span className="admin-dirty-badge">Unsaved changes</span>}
         </p>
       </div>
 
       <form onSubmit={handleSubmit} className="admin-form">
         <div className="admin-form-grid">
-          {/* Left Column */}
+          {/* Left Column: Media */}
           <div className="admin-form-col">
             <div className="admin-form-section">
-              <h3 className="admin-form-section-title">Images</h3>
+              <h3 className="admin-form-section-title">Media</h3>
               <div className="admin-field">
                 <label htmlFor="images" className="admin-label">Image URLs (one per line)</label>
                 <textarea
@@ -171,6 +259,14 @@ export default function AdminListingFormPage() {
                   placeholder="https://example.com/image1.jpg"
                 />
               </div>
+              {/* Image Previews */}
+              {imageUrls.length > 0 && (
+                <div className="admin-image-previews">
+                  {imageUrls.map((url, i) => (
+                    <ImagePreview key={i} src={url} />
+                  ))}
+                </div>
+              )}
             </div>
 
             <div className="admin-form-section">
@@ -190,10 +286,10 @@ export default function AdminListingFormPage() {
             </div>
           </div>
 
-          {/* Right Column */}
+          {/* Right Column: Core Info */}
           <div className="admin-form-col">
             <div className="admin-form-section">
-              <h3 className="admin-form-section-title">Vehicle Info</h3>
+              <h3 className="admin-form-section-title">Core Info</h3>
               
               <div className="admin-field-row">
                 <div className="admin-field">
@@ -206,6 +302,8 @@ export default function AdminListingFormPage() {
                     value={form.year}
                     onChange={handleChange}
                     placeholder="2021"
+                    min="1900"
+                    max={currentYear + 1}
                   />
                   {errors.year && <span className="admin-error">{errors.year}</span>}
                 </div>
@@ -263,6 +361,7 @@ export default function AdminListingFormPage() {
                     value={form.price}
                     onChange={handleChange}
                     placeholder="24500"
+                    min="0"
                   />
                   {errors.price && <span className="admin-error">{errors.price}</span>}
                 </div>
@@ -276,6 +375,7 @@ export default function AdminListingFormPage() {
                     value={form.mileage}
                     onChange={handleChange}
                     placeholder="32000"
+                    min="0"
                   />
                   {errors.mileage && <span className="admin-error">{errors.mileage}</span>}
                 </div>
@@ -360,11 +460,29 @@ export default function AdminListingFormPage() {
           <button type="submit" className="admin-btn admin-btn-primary">
             {isEdit ? 'Save Changes' : 'Create Listing'}
           </button>
-          <Link to="/admin/listings" className="admin-btn">
+          <Link to="/admin/listings" className="admin-btn" onClick={handleCancel}>
             Cancel
           </Link>
         </div>
       </form>
     </AdminLayout>
+  );
+}
+
+// Image preview component with error fallback
+function ImagePreview({ src }) {
+  const [error, setError] = useState(false);
+
+  if (error || !src) {
+    return <div className="admin-image-preview admin-image-preview-error">Invalid URL</div>;
+  }
+
+  return (
+    <img
+      src={src}
+      alt="Preview"
+      className="admin-image-preview"
+      onError={() => setError(true)}
+    />
   );
 }

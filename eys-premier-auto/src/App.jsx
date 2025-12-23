@@ -4,8 +4,8 @@ import { Routes, Route, Link } from 'react-router-dom';
 import InventoryPage from './inventory/pages/InventoryPage.jsx';
 import ListingDetailPage from './inventory/pages/ListingDetailPage.jsx';
 import AdminGatePage from './admin/pages/AdminGatePage.jsx';
-import AdminListingsPage from './admin/pages/AdminListingsPage.jsx';
-import AdminListingFormPage from './admin/pages/AdminListingsFormPage.jsx';
+import AdminListingsPage from './admin/pages/AdminListingPage.jsx';
+import AdminListingFormPage from './admin/pages/AdminListingFormPage.jsx';
 
 function Portfolio() {
   const [scrolled, setScrolled] = useState(false);
@@ -131,6 +131,11 @@ function App() {
       <Route path="/" element={<Portfolio />} />
       <Route path="/inventory" element={<InventoryPage />} />
       <Route path="/inventory/:id" element={<ListingDetailPage />} />
+      {/* Admin Routes */}
+      <Route path="/admin" element={<AdminGatePage />} />
+      <Route path="/admin/listings" element={<AdminListingsPage />} />
+      <Route path="/admin/listings/new" element={<AdminListingFormPage />} />
+      <Route path="/admin/listings/:id/edit" element={<AdminListingFormPage />} />
     </Routes>
   );
 }

@@ -1,13 +1,20 @@
+import { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { getAllListings } from '../../inventory/repo/ListingsRepo.js';
+import { getAllListings, deleteListing } from '../../inventory/repo/ListingsRepo.js';
 import AdminLayout from '../components/AdminLayout.jsx';
 
 export default function AdminListingsPage() {
-  const listings = getAllListings();
+  const [listings, setListings] = useState(() => getAllListings());
 
   const formatTitle = (listing) => {
     const base = `${listing.year} ${listing.make} ${listing.model}`;
     return listing.trim ? `${base} ${listing.trim}` : base;
+  };
+
+  const handleDelete = (id, title) => {
+    if (!window.confirm(`Delete "${title}"? This cannot be undone.`)) return;
+    deleteListing(id);
+    setListings(getAllListings());
   };
 
   return (
@@ -24,33 +31,43 @@ export default function AdminListingsPage() {
 
       {listings.length > 0 ? (
         <div className="admin-list">
-          {listings.map((listing) => (
-            <div key={listing.id} className="admin-list-row">
-              <div className="admin-list-thumb">
-                {listing.images?.[0] ? (
-                  <img src={listing.images[0]} alt={formatTitle(listing)} />
-                ) : (
-                  <div className="admin-list-thumb-placeholder">No img</div>
-                )}
+          {listings.map((listing) => {
+            const title = formatTitle(listing);
+            return (
+              <div key={listing.id} className="admin-list-row">
+                <div className="admin-list-thumb">
+                  {listing.images?.[0] ? (
+                    <img src={listing.images[0]} alt={title} />
+                  ) : (
+                    <div className="admin-list-thumb-placeholder">No img</div>
+                  )}
+                </div>
+                <div className="admin-list-info">
+                  <p className="admin-list-title">{title}</p>
+                  <p className="admin-list-meta">
+                    <span>${listing.price?.toLocaleString() || '—'}</span>
+                    <span>{listing.mileage?.toLocaleString() || '—'} mi</span>
+                    <span>{listing.location || '—'}</span>
+                  </p>
+                </div>
+                <div className="admin-list-actions">
+                  <Link
+                    to={`/admin/listings/${listing.id}/edit`}
+                    className="admin-btn admin-btn-small"
+                  >
+                    Edit
+                  </Link>
+                  <button
+                    type="button"
+                    className="admin-btn admin-btn-small admin-btn-danger"
+                    onClick={() => handleDelete(listing.id, title)}
+                  >
+                    Delete
+                  </button>
+                </div>
               </div>
-              <div className="admin-list-info">
-                <p className="admin-list-title">{formatTitle(listing)}</p>
-                <p className="admin-list-meta">
-                  <span>${listing.price?.toLocaleString() || '—'}</span>
-                  <span>{listing.mileage?.toLocaleString() || '—'} mi</span>
-                  <span>{listing.location || '—'}</span>
-                </p>
-              </div>
-              <div className="admin-list-actions">
-                <Link
-                  to={`/admin/listings/${listing.id}/edit`}
-                  className="admin-btn admin-btn-small"
-                >
-                  Edit
-                </Link>
-              </div>
-            </div>
-          ))}
+            );
+          })}
         </div>
       ) : (
         <div className="admin-empty">

@@ -3,7 +3,7 @@ import '../admin.css';
 
 export default function AdminLayout({ children }) {
   return (
-    <>
+    <div className="admin-shell">
       <div className="admin-topbar">
         <div className="admin-topbar-left">
           <Link to="/admin" className="admin-topbar-title">Admin</Link>
@@ -17,6 +17,6 @@ export default function AdminLayout({ children }) {
       <div className="admin-container">
         {children}
       </div>
-    </>
+    </div>
   );
 }

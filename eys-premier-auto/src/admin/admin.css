@@ -302,6 +302,174 @@
     margin: 0 0 var(--admin-space-4);
     color: var(--admin-muted);
   }
+
+  /* =========================
+   Form Styles
+   ========================= */
+
+.admin-form {
+  display: flex;
+  flex-direction: column;
+  gap: var(--admin-space-5);
+}
+
+.admin-form-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--admin-space-5);
+}
+
+@media (max-width: 900px) {
+  .admin-form-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.admin-form-col {
+  display: flex;
+  flex-direction: column;
+  gap: var(--admin-space-5);
+}
+
+.admin-form-section {
+  background: var(--admin-surface);
+  border: 1px solid var(--admin-border);
+  border-radius: var(--admin-radius);
+  padding: var(--admin-space-5);
+}
+
+.admin-form-section-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--admin-space-4);
+  margin-bottom: var(--admin-space-4);
+}
+
+.admin-form-section-title {
+  margin: 0 0 var(--admin-space-4);
+  font-size: 0.9375rem;
+  font-weight: 600;
+  color: var(--admin-text);
+}
+
+.admin-form-section-header .admin-form-section-title {
+  margin-bottom: 0;
+}
+
+/* Fields */
+.admin-field {
+  display: flex;
+  flex-direction: column;
+  gap: var(--admin-space-2);
+}
+
+.admin-field-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--admin-space-4);
+}
+
+@media (max-width: 500px) {
+  .admin-field-row {
+    grid-template-columns: 1fr;
+  }
+}
+
+.admin-label {
+  font-size: 0.8125rem;
+  font-weight: 500;
+  color: var(--admin-muted);
+}
+
+.admin-input,
+.admin-textarea,
+.admin-select {
+  padding: var(--admin-space-3);
+  font-size: 0.9375rem;
+  font-family: inherit;
+  color: var(--admin-text);
+  background: var(--admin-surface-2);
+  border: 1px solid var(--admin-border);
+  border-radius: var(--admin-radius-sm);
+  transition: border-color 0.15s;
+}
+
+.admin-input::placeholder,
+.admin-textarea::placeholder {
+  color: var(--admin-muted);
+  opacity: 0.6;
+}
+
+.admin-input:focus,
+.admin-textarea:focus,
+.admin-select:focus {
+  outline: none;
+  border-color: var(--admin-accent);
+}
+
+.admin-input-error {
+  border-color: #e55;
+}
+
+.admin-textarea {
+  resize: vertical;
+  min-height: 80px;
+}
+
+.admin-error {
+  font-size: 0.75rem;
+  color: #e55;
+}
+
+.admin-muted-text {
+  font-size: 0.875rem;
+  color: var(--admin-muted);
+  margin: 0;
+}
+
+/* Specs Editor */
+.admin-specs-list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--admin-space-3);
+}
+
+.admin-spec-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr auto;
+  gap: var(--admin-space-3);
+  align-items: center;
+}
+
+@media (max-width: 500px) {
+  .admin-spec-row {
+    grid-template-columns: 1fr;
+  }
+  
+  .admin-spec-row .admin-btn {
+    justify-self: start;
+  }
+}
+
+/* Form Actions */
+.admin-form-actions {
+  display: flex;
+  gap: var(--admin-space-3);
+  padding-top: var(--admin-space-4);
+  border-top: 1px solid var(--admin-border);
+}
+
+/* Danger Button */
+.admin-btn-danger {
+  color: #e55;
+  border-color: rgba(238, 85, 85, 0.3);
+}
+
+.admin-btn-danger:hover {
+  background: rgba(238, 85, 85, 0.15);
+  border-color: rgba(238, 85, 85, 0.5);
+}
   
   /* =========================
      Responsive

@@ -482,12 +482,24 @@
     gap: 12px;
   }
   
+  .inv-gallery:focus {
+    outline: none;
+  }
+  
+  .inv-gallery:focus-visible {
+    outline: 2px solid rgba(100, 150, 255, 0.6);
+    outline-offset: 4px;
+    border-radius: 8px;
+  }
+  
   .inv-gallery__main {
+    position: relative;
     width: 100%;
     aspect-ratio: 16 / 10;
     overflow: hidden;
     border-radius: 8px;
     background: rgba(128, 128, 128, 0.1);
+    user-select: none;
   }
   
   .inv-gallery__main img {
@@ -496,6 +508,63 @@
     object-fit: cover;
   }
   
+  /* Arrow Navigation */
+  .inv-gallery__nav {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 40px;
+    height: 40px;
+    padding: 0;
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    border-radius: 50%;
+    background: rgba(0, 0, 0, 0.5);
+    color: rgba(255, 255, 255, 0.9);
+    font-size: 24px;
+    line-height: 1;
+    cursor: pointer;
+    opacity: 0.6;
+    transition: opacity 0.15s, background 0.15s;
+  }
+  
+  .inv-gallery__nav:hover:not(:disabled) {
+    opacity: 1;
+    background: rgba(0, 0, 0, 0.7);
+  }
+  
+  .inv-gallery__nav:focus-visible {
+    opacity: 1;
+    outline: 2px solid rgba(100, 150, 255, 0.8);
+    outline-offset: 2px;
+  }
+  
+  .inv-gallery__nav:disabled {
+    opacity: 0.2;
+    cursor: not-allowed;
+  }
+  
+  .inv-gallery__nav--prev {
+    left: 12px;
+  }
+  
+  .inv-gallery__nav--next {
+    right: 12px;
+  }
+  
+  /* Image Counter */
+  .inv-gallery__counter {
+    position: absolute;
+    bottom: 12px;
+    right: 12px;
+    padding: 4px 10px;
+    font-size: 0.75rem;
+    font-weight: 500;
+    color: rgba(255, 255, 255, 0.9);
+    background: rgba(0, 0, 0, 0.5);
+    border-radius: 4px;
+  }
+  
+  /* Thumbnails */
   .inv-gallery__thumbs {
     display: flex;
     gap: 8px;
@@ -503,7 +572,6 @@
     padding-bottom: 4px;
   }
   
-  /* Hide scrollbar but keep functionality */
   .inv-gallery__thumbs::-webkit-scrollbar {
     height: 4px;
   }
@@ -552,6 +620,33 @@
     outline: 2px solid rgba(100, 150, 255, 0.8);
     outline-offset: 2px;
   }
+  
+  /* Reduced Motion */
+  @media (prefers-reduced-motion: reduce) {
+    .inv-gallery__nav,
+    .inv-thumb {
+      transition: none !important;
+    }
+  }
+  
+  /* Mobile: slightly smaller arrows */
+  @media (max-width: 600px) {
+    .inv-gallery__nav {
+      width: 36px;
+      height: 36px;
+      font-size: 20px;
+    }
+  
+    .inv-gallery__nav--prev {
+      left: 8px;
+    }
+  
+    .inv-gallery__nav--next {
+      right: 8px;
+    }
+  }
+  
+  
   /*mobile responsive */
   @media (max-width: 600px) {
     .inv-tools {

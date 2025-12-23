@@ -1,15 +1,20 @@
-import { useState } from 'react';
+import { useState, useRef } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { getListingById } from '../repo/ListingsRepo.js';
 import InventoryLayout from '../components/InventoryLayout.jsx';
 
 const PLACEHOLDER_IMAGE = 'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 300"%3E%3Crect fill="%23374151" width="400" height="300"/%3E%3Ctext x="50%25" y="50%25" dominant-baseline="middle" text-anchor="middle" fill="%236b7280" font-family="system-ui" font-size="16"%3ENo Image%3C/text%3E%3C/svg%3E';
 
+const SWIPE_THRESHOLD = 40;
+
 export default function ListingDetailPage() {
   const { id } = useParams();
   const listing = getListingById(id);
   const [selectedIndex, setSelectedIndex] = useState(0);
   const [errorIndexes, setErrorIndexes] = useState(new Set());
+  
+  // Swipe tracking
+  const swipeRef = useRef({ startX: 0, startY: 0, swiping: false });
 
   if (!listing) {
     return (
@@ -32,6 +37,18 @@ export default function ListingDetailPage() {
   const images = listing.images?.length ? listing.images : [PLACEHOLDER_IMAGE];
   const hasMultipleImages = images.length > 1;
 
+  // Navigation helpers
+  const canGoPrev = selectedIndex > 0;
+  const canGoNext = selectedIndex < images.length - 1;
+
+  const goToPrev = () => {
+    if (canGoPrev) setSelectedIndex((prev) => prev - 1);
+  };
+
+  const goToNext = () => {
+    if (canGoNext) setSelectedIndex((prev) => prev + 1);
+  };
+
   // Handle image load error
   const handleImageError = (index) => {
     setErrorIndexes((prev) => new Set(prev).add(index));
@@ -42,15 +59,91 @@ export default function ListingDetailPage() {
     return errorIndexes.has(index) ? PLACEHOLDER_IMAGE : images[index];
   };
 
+  // Keyboard navigation for main gallery
+  const handleGalleryKeyDown = (e) => {
+    if (e.key === 'ArrowLeft') {
+      e.preventDefault();
+      goToPrev();
+    } else if (e.key === 'ArrowRight') {
+      e.preventDefault();
+      goToNext();
+    }
+  };
+
   // Keyboard navigation for thumbnails
-  const handleKeyDown = (e) => {
+  const handleThumbsKeyDown = (e) => {
     if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') {
       e.preventDefault();
-      setSelectedIndex((prev) => Math.max(0, prev - 1));
+      goToPrev();
     } else if (e.key === 'ArrowRight' || e.key === 'ArrowDown') {
       e.preventDefault();
-      setSelectedIndex((prev) => Math.min(images.length - 1, prev + 1));
+      goToNext();
     }
+  };
+
+  // Swipe handlers (Pointer Events)
+  const handlePointerDown = (e) => {
+    if (!hasMultipleImages) return;
+    swipeRef.current = {
+      startX: e.clientX,
+      startY: e.clientY,
+      swiping: true,
+    };
+  };
+
+  const handlePointerMove = (e) => {
+    // We don't need to track move, just need start position
+  };
+
+  const handlePointerUp = (e) => {
+    if (!swipeRef.current.swiping || !hasMultipleImages) return;
+    
+    const deltaX = e.clientX - swipeRef.current.startX;
+    const deltaY = e.clientY - swipeRef.current.startY;
+    
+    // Only trigger if horizontal movement is dominant
+    if (Math.abs(deltaX) > Math.abs(deltaY) && Math.abs(deltaX) >= SWIPE_THRESHOLD) {
+      if (deltaX < 0) {
+        goToNext();
+      } else {
+        goToPrev();
+      }
+    }
+    
+    swipeRef.current.swiping = false;
+  };
+
+  const handlePointerCancel = () => {
+    swipeRef.current.swiping = false;
+  };
+
+  // Touch fallback (for older browsers)
+  const handleTouchStart = (e) => {
+    if (!hasMultipleImages || e.touches.length !== 1) return;
+    const touch = e.touches[0];
+    swipeRef.current = {
+      startX: touch.clientX,
+      startY: touch.clientY,
+      swiping: true,
+    };
+  };
+
+  const handleTouchEnd = (e) => {
+    if (!swipeRef.current.swiping || !hasMultipleImages) return;
+    
+    const touch = e.changedTouches[0];
+    const deltaX = touch.clientX - swipeRef.current.startX;
+    const deltaY = touch.clientY - swipeRef.current.startY;
+    
+    if (Math.abs(deltaX) > Math.abs(deltaY) && Math.abs(deltaX) >= SWIPE_THRESHOLD) {
+      if (deltaX < 0) {
+        goToNext();
+      } else {
+        goToPrev();
+      }
+    }
+    
+    swipeRef.current.swiping = false;
   };
 
   // Build specs array
@@ -74,21 +167,67 @@ export default function ListingDetailPage() {
           {/* Main Column */}
           <div className="inv-detail-main">
             {/* Image Gallery */}
-            <div className="inv-gallery">
-              <div className="inv-gallery__main">
+            <div
+              className="inv-gallery"
+              onKeyDown={handleGalleryKeyDown}
+              tabIndex={hasMultipleImages ? 0 : undefined}
+              role={hasMultipleImages ? "region" : undefined}
+              aria-label={hasMultipleImages ? "Image gallery, use arrow keys to navigate" : undefined}
+            >
+              <div
+                className="inv-gallery__main"
+                onPointerDown={handlePointerDown}
+                onPointerUp={handlePointerUp}
+                onPointerCancel={handlePointerCancel}
+                onTouchStart={handleTouchStart}
+                onTouchEnd={handleTouchEnd}
+                style={{ touchAction: hasMultipleImages ? 'pan-y pinch-zoom' : undefined }}
+              >
                 <img
                   src={getImageSrc(selectedIndex)}
-                  alt={`${fullTitle} - Photo ${selectedIndex + 1}`}
+                  alt={`${fullTitle} - Photo ${selectedIndex + 1} of ${images.length}`}
                   onError={() => handleImageError(selectedIndex)}
+                  draggable={false}
                 />
+
+                {/* Arrow Navigation */}
+                {hasMultipleImages && (
+                  <>
+                    <button
+                      type="button"
+                      className="inv-gallery__nav inv-gallery__nav--prev"
+                      onClick={goToPrev}
+                      disabled={!canGoPrev}
+                      aria-label="Previous photo"
+                    >
+                      ‹
+                    </button>
+                    <button
+                      type="button"
+                      className="inv-gallery__nav inv-gallery__nav--next"
+                      onClick={goToNext}
+                      disabled={!canGoNext}
+                      aria-label="Next photo"
+                    >
+                      ›
+                    </button>
+                  </>
+                )}
+
+                {/* Image Counter */}
+                {hasMultipleImages && (
+                  <div className="inv-gallery__counter">
+                    {selectedIndex + 1} / {images.length}
+                  </div>
+                )}
               </div>
               
               {hasMultipleImages && (
                 <div
                   className="inv-gallery__thumbs"
                   role="group"
-                  aria-label="Image gallery"
-                  onKeyDown={handleKeyDown}
+                  aria-label="Thumbnail navigation"
+                  onKeyDown={handleThumbsKeyDown}
                 >
                   {images.map((img, index) => (
                     <button
@@ -103,6 +242,7 @@ export default function ListingDetailPage() {
                         src={errorIndexes.has(index) ? PLACEHOLDER_IMAGE : img}
                         alt=""
                         onError={() => handleImageError(index)}
+                        draggable={false}
                       />
                     </button>
                   ))}

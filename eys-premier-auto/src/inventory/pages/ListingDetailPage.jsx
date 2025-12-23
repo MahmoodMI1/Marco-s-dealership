@@ -1,10 +1,15 @@
+import { useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { getListingById } from '../repo/ListingsRepo.js';
 import InventoryLayout from '../components/InventoryLayout.jsx';
 
+const PLACEHOLDER_IMAGE = 'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 300"%3E%3Crect fill="%23374151" width="400" height="300"/%3E%3Ctext x="50%25" y="50%25" dominant-baseline="middle" text-anchor="middle" fill="%236b7280" font-family="system-ui" font-size="16"%3ENo Image%3C/text%3E%3C/svg%3E';
+
 export default function ListingDetailPage() {
   const { id } = useParams();
   const listing = getListingById(id);
+  const [selectedIndex, setSelectedIndex] = useState(0);
+  const [errorIndexes, setErrorIndexes] = useState(new Set());
 
   if (!listing) {
     return (
@@ -23,10 +28,32 @@ export default function ListingDetailPage() {
   const displayTitle = `${listing.year} ${listing.make} ${listing.model}`;
   const fullTitle = listing.trim ? `${displayTitle} ${listing.trim}` : displayTitle;
   
-  const hasImages = listing.images && listing.images.length > 0;
-  const displayImage = hasImages ? listing.images[0] : null;
+  // Images array with fallback
+  const images = listing.images?.length ? listing.images : [PLACEHOLDER_IMAGE];
+  const hasMultipleImages = images.length > 1;
 
-  // Build specs array, filter out falsy values
+  // Handle image load error
+  const handleImageError = (index) => {
+    setErrorIndexes((prev) => new Set(prev).add(index));
+  };
+
+  // Get image src with fallback for broken images
+  const getImageSrc = (index) => {
+    return errorIndexes.has(index) ? PLACEHOLDER_IMAGE : images[index];
+  };
+
+  // Keyboard navigation for thumbnails
+  const handleKeyDown = (e) => {
+    if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') {
+      e.preventDefault();
+      setSelectedIndex((prev) => Math.max(0, prev - 1));
+    } else if (e.key === 'ArrowRight' || e.key === 'ArrowDown') {
+      e.preventDefault();
+      setSelectedIndex((prev) => Math.min(images.length - 1, prev + 1));
+    }
+  };
+
+  // Build specs array
   const isAdminSpecs = Array.isArray(listing.specs);
   const specsArray = isAdminSpecs
     ? listing.specs.filter(s => s.label && s.value != null && s.value !== '')
@@ -44,15 +71,41 @@ export default function ListingDetailPage() {
         <Link to="/inventory" className="inv-detail-back">← Back to Inventory</Link>
 
         <div className="inv-detail-grid">
-          {/* Main Column: Image + text sections */}
+          {/* Main Column */}
           <div className="inv-detail-main">
-            {/* Image or Placeholder */}
-            <div className="inv-detail-image-wrapper">
-              {displayImage ? (
-                <img src={displayImage} alt={fullTitle} className="inv-detail-image" />
-              ) : (
-                <div className="inv-detail-image-placeholder">
-                  <span>No Image Available</span>
+            {/* Image Gallery */}
+            <div className="inv-gallery">
+              <div className="inv-gallery__main">
+                <img
+                  src={getImageSrc(selectedIndex)}
+                  alt={`${fullTitle} - Photo ${selectedIndex + 1}`}
+                  onError={() => handleImageError(selectedIndex)}
+                />
+              </div>
+              
+              {hasMultipleImages && (
+                <div
+                  className="inv-gallery__thumbs"
+                  role="group"
+                  aria-label="Image gallery"
+                  onKeyDown={handleKeyDown}
+                >
+                  {images.map((img, index) => (
+                    <button
+                      key={index}
+                      type="button"
+                      className={`inv-thumb ${index === selectedIndex ? 'is-active' : ''}`}
+                      onClick={() => setSelectedIndex(index)}
+                      aria-label={`View photo ${index + 1} of ${images.length}`}
+                      aria-pressed={index === selectedIndex}
+                    >
+                      <img
+                        src={errorIndexes.has(index) ? PLACEHOLDER_IMAGE : img}
+                        alt=""
+                        onError={() => handleImageError(index)}
+                      />
+                    </button>
+                  ))}
                 </div>
               )}
             </div>
@@ -69,7 +122,7 @@ export default function ListingDetailPage() {
               )}
             </div>
 
-            {/* Description (conditional) */}
+            {/* Description */}
             {hasDescription && (
               <div className="inv-detail-card">
                 <h2 className="inv-detail-section-title">Description</h2>
@@ -77,7 +130,7 @@ export default function ListingDetailPage() {
               </div>
             )}
 
-            {/* Specs (conditional) */}
+            {/* Specs */}
             {hasSpecs && (
               <div className="inv-detail-card">
                 <h2 className="inv-detail-section-title">Specifications</h2>
@@ -93,7 +146,7 @@ export default function ListingDetailPage() {
             )}
           </div>
 
-          {/* Sidebar: Price + CTA */}
+          {/* Sidebar */}
           <aside className="inv-detail-side">
             <div className="inv-detail-card inv-detail-price-card">
               <p className="inv-detail-price">

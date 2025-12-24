@@ -24,6 +24,7 @@ export default function ListingCard({ listing }) {
       <h3 style={{ margin: '12px 0 8px' }}>{displayTitle}</h3>
       <p style={{ margin: 0 }}>${listing.price.toLocaleString()}</p>
       <p style={{ margin: '4px 0 0', color: '#666' }}>{listing.mileage.toLocaleString()} miles</p>
+
     </Link>
   );
 }
